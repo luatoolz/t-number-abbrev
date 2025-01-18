@@ -7,13 +7,12 @@ local this = {}
 return setmetatable(this, {
 __call = function(self, it, ...)
   if rawequal(self, this) then
-    it=it or {}
     it.scale = it.scale or 1000
-    return mt({}, getmetatable(num),
-      {__brev=setmetatable(it, getmetatable(self)) .. {...}})
+    local aa = (setmetatable(it, getmetatable(self)) .. {...})
+    return mt({}, {__brev=aa}, getmetatable(num))
   elseif type(it)=='number' then
     it=math.abs(it)
-    local scale = self.scale
+    local scale = self.scale or 1000
     local pow = it>scale and math.ceil(math.log(it)/math.log(scale)) or 1
     return self[pow], pow
   end
@@ -36,7 +35,9 @@ __newindex = function(self, k, v)
     rawset(self, k, g)
     rawset(self, utf8.lower(name), g)
     if type(v)=='table' then
-      for i=2,#v do rawset(self, utf8.lower(v[i]), g) end
+      for i=2,#v do
+        rawset(self, utf8.lower(v[i]), g)
+      end
     end
   end
 end,

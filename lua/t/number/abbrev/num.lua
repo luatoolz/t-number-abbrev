@@ -6,15 +6,15 @@ local precision, number_format, round =
   pkg.number_format,
   pkg.round
 
-local this = {}
 local mtf = {brev='__brev', __brev='__brev'}
-return setmetatable(this, {
+return setmetatable({}, {
 __call = function(self, it)
   if type(it)=='number' then
     return setmetatable({round(it, self.precision)}, getmetatable(self))
   end
   if type(it)=='table' then
     if rawequal(getmetatable(self), getmetatable(it)) then return it end
+    if (not getmetatable(it)) and #it==0 then return nil end
     if (not getmetatable(it)) and type(it[1])=='number' then return self(it[1]) end
     return self(to.number(it) or tostring(it))
   end
@@ -24,7 +24,7 @@ __call = function(self, it)
   end
   return nil
 end,
-__index = function(self, x) return rawget(self, x) or mt(self)[mtf[x]] or self.brev[x] end,
+__index = function(self, x) return rawget(self, x) or mt(self)[mtf[x]] or mt(self).__brev[x] end,
 __export = function(self) return to.number(self) end,
 __tonumber = function(self) return self[1] end,
 __tostring = function(self)
@@ -37,14 +37,14 @@ __tostring = function(self)
   local fmt = number_format(precision(n, decimals))
   return string.format(fmt, self.prefix or '', n, abbrev)
 end,
-__add = function(a,b) return this(to.number(this(a))+to.number(this(b))) end,
-__div = function(a,b) return this(to.number(this(a))/to.number(this(b))) end,
-__eq = function(a,b) return to.number(this(a))==to.number(this(b)) end,
-__le = function(a,b) return to.number(this(a))<=to.number(this(b)) end,
-__lt = function(a,b) return to.number(this(a))<to.number(this(b)) end,
-__mul = function(a,b) return this(to.number(this(a))*to.number(this(b))) end,
-__mod = function(a,b) return this(to.number(this(a))%to.number(this(b))) end,
-__pow = function(a,b) return this(to.number(this(a))^to.number(this(b))) end,
-__sub = function(a,b) return this(to.number(this(a))-to.number(this(b))) end,
+__add = function(a,b) return a(to.number(a)+to.number(a(b))) end,
+__div = function(a,b) return a(to.number(a)/to.number(a(b))) end,
+__eq = function(a,b) return to.number(a)==to.number(a(b)) end,
+__le = function(a,b) return to.number(a)<=to.number(a(b)) end,
+__lt = function(a,b) return to.number(a)<to.number(a(b)) end,
+__mul = function(a,b) return a(to.number(a)*to.number(a(b))) end,
+__mod = function(a,b) return a(to.number(a)%to.number(a(b))) end,
+__pow = function(a,b) return a(to.number(a)^to.number(a(b))) end,
+__sub = function(a,b) return a(to.number(a)-to.number(a(b))) end,
 __unm = function(self) return self(-self[1]) end,
 })
