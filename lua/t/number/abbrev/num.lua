@@ -1,5 +1,5 @@
-local t = require "t"
-local to, mt, utf8 = t.to, t.mt, t.utf8
+local t = require 't'
+local number, mt, utf8 = t.number, t['mt.mt'], t.utf8
 local pkg = t.pkg(...)
 local precision, number_format, round =
   pkg.precision,
@@ -16,7 +16,7 @@ __call = function(self, it)
     if rawequal(getmetatable(self), getmetatable(it)) then return it end
     if (not getmetatable(it)) and #it==0 then return nil end
     if (not getmetatable(it)) and type(it[1])=='number' then return self(it[1]) end
-    return self(to.number(it) or tostring(it))
+    return self(number(it) or tostring(it))
   end
   if type(it)=='string' then
     local n, id = utf8.match(it, '(%-?%d+%.?%d*)%s*(%a*)%s*')
@@ -25,7 +25,7 @@ __call = function(self, it)
   return nil
 end,
 __index = function(self, x) return rawget(self, x) or mt(self)[mtf[x]] or mt(self).__brev[x] end,
-__export = function(self) return to.number(self) end,
+__export = function(self) return number(self) end,
 __tonumber = function(self) return self[1] end,
 __tostring = function(self)
   local n = self[1]
@@ -37,14 +37,14 @@ __tostring = function(self)
   local fmt = number_format(precision(n, decimals))
   return string.format(fmt, self.prefix or '', n, abbrev)
 end,
-__add = function(a,b) return a(to.number(a)+to.number(a(b))) end,
-__div = function(a,b) return a(to.number(a)/to.number(a(b))) end,
-__eq = function(a,b) return to.number(a)==to.number(a(b)) end,
-__le = function(a,b) return to.number(a)<=to.number(a(b)) end,
-__lt = function(a,b) return to.number(a)<to.number(a(b)) end,
-__mul = function(a,b) return a(to.number(a)*to.number(a(b))) end,
-__mod = function(a,b) return a(to.number(a)%to.number(a(b))) end,
-__pow = function(a,b) return a(to.number(a)^to.number(a(b))) end,
-__sub = function(a,b) return a(to.number(a)-to.number(a(b))) end,
+__add = function(a,b) return a(number(a)+number(a(b))) end,
+__div = function(a,b) return a(number(a)/number(a(b))) end,
+__eq = function(a,b) return number(a)==number(a(b)) end,
+__le = function(a,b) return number(a)<=number(a(b)) end,
+__lt = function(a,b) return number(a)<number(a(b)) end,
+__mul = function(a,b) return a(number(a)*number(a(b))) end,
+__mod = function(a,b) return a(number(a)%number(a(b))) end,
+__pow = function(a,b) return a(number(a)^number(a(b))) end,
+__sub = function(a,b) return a(number(a)-number(a(b))) end,
 __unm = function(self) return self(-self[1]) end,
 })

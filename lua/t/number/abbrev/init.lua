@@ -1,10 +1,11 @@
-local t = require "t"
+local t = require 't'
 local pkg = t.pkg(...)
-local is, mt, utf8 = t.is, t.mt, t.utf8
 local grade, num = pkg.grade, pkg.num
+local is, mt, utf8 = t.is, t['mt.mt'], t.utf8
 
 local this = {}
 return setmetatable(this, {
+__name='abbrev',
 __call = function(self, it, ...)
   if rawequal(self, this) then
     it.scale = it.scale or 1000
@@ -23,13 +24,13 @@ __concat = function(self, brevs)
   return self
 end,
 __index = function(self, x)
-  if rawequal(self, this) then return rawget(self, x) or mt.loader(self, x) end
-  if type(x)=='number' and is.natural(x) then return rawget(self, x>#self and #self or x) end
+  if rawequal(self, this) then return rawget(self, x) or table.save(self, x, pkg[x]) end
+  if type(x)=='number' and is.number.natural(x) then return rawget(self, x>#self and #self or x) end
   if type(x)=='string' then return rawget(self, x) or rawget(self, utf8.lower(x)) end
 end,
 __newindex = function(self, k, v)
   if rawequal(self, this) then return nil end
-  if type(k)=='number' and is.natural(k) then
+  if type(k)=='number' and is.number.natural(k) then
     local name = type(v)=='table' and v[1] or v
     local g = grade({scale=self.scale, name=name, power=k-1})
     rawset(self, k, g)

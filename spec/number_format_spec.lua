@@ -1,10 +1,13 @@
 describe("number.abbrev.number_format", function()
   local t, fmt
   setup(function()
-    t = require "t"
+    t = require 't'
     fmt = t.number.abbrev.number_format
   end)
   it("meta", function()
+    assert.is_table(t.number)
+    assert.equal('number', getmetatable(t.number).__name)
+    assert.equal('abbrev', getmetatable(t.number.abbrev).__name)
     assert.callable(fmt)
   end)
   it("positive", function()

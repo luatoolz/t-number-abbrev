@@ -1,16 +1,16 @@
 describe("number.abbrev.operations", function()
-  local t, brev, bn, tonum
+  local t, brev, bn, number
   setup(function()
-    t = require "t"
-    brev = t.number.abbrev
+    t = require 't'
+    number = t.number
+    brev = number.abbrev
     bn = brev({scale=1000, prefix='$', precision=0, decimals=1}, {'m', 'Million', ''}, {'b', 'Billion'}, {'t', 'Trillion'})
-    tonum = t.to.number
   end)
   it("common", function()
     assert.is_table(t)
     local k = bn(1)
     assert.equal(1, k[1])
-    assert.equal(1, tonum(k))
+    assert.equal(1, number(k))
     assert.equal('$1m', tostring(k))
     assert.is_table(bn)
   end)

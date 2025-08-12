@@ -1,4 +1,4 @@
-local t = require "t"
+local t = require 't'
 local save = table.save
 
 local this = {}
